@@ -112,14 +112,8 @@ MetadataExtras = {
 }
 
 IntendedFor = {
-    b0_mag: [
-        '{session}/func/sub-{subject}_{session}_task-rest_acq-multiband_bold.nii.gz',
-        '{session}/func/sub-{subject}_{session}_task-rest_acq-singleband_bold.nii.gz',
-        '{session}/func/sub-{subject}_{session}_task-fracback_acq-singleband_bold.nii.gz',
-        '{session}/func/sub-{subject}_{session}_task-face_acq-singleband_bold.nii.gz'
-    ],
-
     b0_phase: [
+        '{session}/dwi/sub-{subject}_{session}_acq-multiband_dwi.nii.gz',
         '{session}/func/sub-{subject}_{session}_task-rest_acq-multiband_bold.nii.gz',
         '{session}/func/sub-{subject}_{session}_task-rest_acq-singleband_bold.nii.gz',
         '{session}/func/sub-{subject}_{session}_task-fracback_acq-singleband_bold.nii.gz',
