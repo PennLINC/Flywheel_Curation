@@ -21,3 +21,6 @@ Icon
 .Trashes
 .VolumeIcon.icns
 .com.apple.timemachine.donotpresent
+
+sandbox/
+__pycache__/

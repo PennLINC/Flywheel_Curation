@@ -1,5 +1,45 @@
 import os
 
+'''
+This heuristic curates most of the PNC LG project. The heuristic
+ignores the following (taken from fwheudiconv output):
+
+Series not recognized!:  localizer localizer_9_i00003.nii.gz
+Series not recognized!:  localizer localizer_3_i00003.nii.gz
+Series not recognized!:  localizer localizer_1_i00003.nii.gz
+Series not recognized!:  localizer_8channel localizer_8channel_1_i00003.nii.gz
+Series not recognized!:  MPRAGE_NAVprotocol MPRAGE_NAVprotocol_2.nii.gz
+Series not recognized!:  localizer_32channel localizer_32channel_1_i00002.nii.gz
+Series not recognized!:  epi_singerep_advshim epi_singerep_advshim_5.nii.gz
+Series not recognized!:  localizer localizer_2_i00002.nii.gz
+Series not recognized!:  localizer localizer_3_i00002.nii.gz
+Series not recognized!:  localizer localizer_9_i00001.nii.gz
+Series not recognized!:  epi_singlerep_advshim epi_singlerep_advshim_7.nii.gz
+Series not recognized!:  MPRAGE_NAVprotocol MPRAGE_NAVprotocol_3.nii.gz
+Series not recognized!:  localizer localizer_13_i00003.nii.gz
+Series not recognized!:  epi_singlerep epi_singlerep_5.nii.gz
+Series not recognized!:  localizer localizer_3_i00001.nii.gz
+Series not recognized!:  t2w4radiology t2w4radiology_2.nii.gz
+Series not recognized!:  localizer localizer_2_i00001.nii.gz
+Series not recognized!:  epi_singlerep_advshim epi_singlerep_advshim_8.nii.gz
+Series not recognized!:  epi_singlerep epi_singlerep_7.nii.gz
+Series not recognized!:  MPRAGE_TI1110_ipat2_moco3 MPRAGE_TI1110_ipat2_moco3_3.nii.gz
+Series not recognized!:  localizer_32channel localizer_32channel_1_i00001.nii.gz
+Series not recognized!:  epi_singlerep_advshim epi_singlerep_advshim_6.nii.gz
+Series not recognized!:  localizer localizer_13_i00001.nii.gz
+Series not recognized!:  epi_singlerep_advshim epi_singlerep_advshim_5.nii.gz
+Series not recognized!:  localizer localizer_13_i00002.nii.gz
+Series not recognized!:  localizer_8channel localizer_8channel_1_i00001.nii.gz
+Series not recognized!:  MPRAGE_TI1110_ipat2_moco1 MPRAGE_TI1110_ipat2_moco1_4.nii.gz
+Series not recognized!:  localizer_8channel localizer_8channel_1_i00002.nii.gz
+Series not recognized!:  localizer_32channel localizer_32channel_1_i00003.nii.gz
+Series not recognized!:  localizer localizer_1_i00001.nii.gz
+Series not recognized!:  localizer localizer_2_i00003.nii.gz
+Series not recognized!:  epi_singlerep_advshim epi_singlerep_advshim_9.nii.gz
+Series not recognized!:  localizer localizer_9_i00002.nii.gz
+Series not recognized!:  localizer localizer_1_i00002.nii.gz
+'''
+
 
 def create_key(template, outtype=('nii.gz',), annotation_classes=None):
     if template is None or not template:
@@ -38,6 +78,10 @@ dwi_run2 = create_key(
     'sub-{subject}/{session}/dwi/sub-{subject}_{session}_run-02_dwi')
 frac2back = create_key(
     'sub-{subject}/{session}/func/sub-{subject}_{session}_task-frac2back')
+go2back = create_key(
+    'sub-{subject}/{session}/func/sub-{subject}_{session}_task-go2back')
+hero = create_key(
+    'sub-{subject}/{session}/func/sub-{subject}_{session}_task-hero')
 demo = create_key(
     'sub-{subject}/{session}/func/sub-{subject}_{session}_task-idemo')
 #
@@ -70,7 +114,7 @@ def infotodict(seqinfo):
             b0_mag_single_phasediff: [], b0_phase_single: [],
             b0_mag_multi_phasediff: [], b0_phase_multi: [],
             rest_bold_100: [], rest_bold_124: [], rest_bold_204: [],
-            frac2back: [], demo: [],  # pe_rev:[], rest_sb:[],
+            hero: [], go2back: [], frac2back: [], demo: [],  # pe_rev:[], rest_sb:[],
             # asl_dicomref:[], face:[], asl:[],
             m0: [], asl: []  # , mean_perf:[]
             }
@@ -119,6 +163,10 @@ def infotodict(seqinfo):
 
         elif "frac2back" in protocol:
             get_latest_series(frac2back, s)
+        elif "go2back" in protocol:
+            get_latest_series(go2back, s)
+        elif "hero" in protocol:
+            get_latest_series(hero, s)
         elif "idemo" in protocol:
             get_latest_series(demo, s)
 #        elif "face" in protocol:

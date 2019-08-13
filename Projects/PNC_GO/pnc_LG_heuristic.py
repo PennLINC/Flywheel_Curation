@@ -1,3 +1,18 @@
+'''
+This heuristic curates most of the PNC LG project. The heuristic
+ignores the following (taken from fwheudiconv output):
+
+Series not recognized!:  localizer localizer
+Series not recognized!:  epi_singlerep_advshim epi_singlerep_advshim
+Series not recognized!:  MPRAGE_TI1110_ipat2_moco3 MPRAGE_NAVprotocol
+Series not recognized!:  T2star T2star
+Series not recognized!:  localizer_32channel localizer_32channel
+Series not recognized!:  Axial_T2_star_v2 Axial_T2_star_v2
+Series not recognized!:  epi_singlerep_advshim epi_singlerep_advshim
+Series not recognized!:  Axial_T2_star Axial_T2_star
+Series not recognized!:  MPRAGE_NAVprotocol MPRAGE_NAVprotocol
+'''
+
 import os
 
 
@@ -12,13 +27,14 @@ t1w = create_key(
    'sub-{subject}/{session}/anat/sub-{subject}_{session}_T1w')
 t2w = create_key(
    'sub-{subject}/{session}/anat/sub-{subject}_{session}_T2w')
+# t2star = create_key(
+#   'sub-{subject}/{session}/anat/sub-{subject}_{session}_T2star')
 
 # Field maps
 b0_mag_single_phasediff = create_key(
    'sub-{subject}/{session}/fmap/sub-{subject}_{session}_magnitude{item}')
 b0_phase_single = create_key(
    'sub-{subject}/{session}/fmap/sub-{subject}_{session}_phasediff')
-
 b0_mag_multi_phasediff = create_key(
    'sub-{subject}/{session}/fmap/sub-{subject}_{session}_magnitude{item}')
 b0_phase_multi = create_key(
@@ -70,7 +86,7 @@ def infotodict(seqinfo):
             b0_mag_single_phasediff: [], b0_phase_single: [],
             b0_mag_multi_phasediff: [], b0_phase_multi: [],
             rest_bold_100: [], rest_bold_124: [], rest_bold_204: [],
-            frac2back: [], demo: [],  # pe_rev:[], rest_sb:[],
+            frac2back: [], demo: [], #t2star: [], pe_rev:[], rest_sb:[],
             # asl_dicomref:[], face:[], asl:[],
             m0: [], asl: []  # , mean_perf:[]
             }
@@ -89,6 +105,9 @@ def infotodict(seqinfo):
             get_latest_series(t1w, s)
         elif "t2_sag" in protocol:
             get_latest_series(t2w, s)
+
+        # elif "t2" in protocol and "star" in protocol:
+        #     get_latest_series(t2star, s)
 
         # Fieldmaps
         elif "b0map" in protocol and "M" in s.image_type:
@@ -132,7 +151,7 @@ def infotodict(seqinfo):
                 get_latest_series(rest_bold_204, s)
 
         else:
-            print("Series not recognized!: ", s.protocol_name, s.dcm_dir_name)
+            print("Series not recognized!: ", s.protocol_name, s.series_description)
     return info
 
 IntendedFor = {
