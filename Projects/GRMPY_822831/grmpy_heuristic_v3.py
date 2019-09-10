@@ -31,7 +31,7 @@ fracback = create_key(
    'sub-{subject}/{session}/func/sub-{subject}_{session}_task-fracback_acq-singleband_bold')
 face = create_key(
    'sub-{subject}/{session}/func/sub-{subject}_{session}_task-face_acq-singleband_bold')
- 
+
 # ASL scans
 asl = create_key(
    'sub-{subject}/{session}/asl/sub-{subject}_{session}_asl')
