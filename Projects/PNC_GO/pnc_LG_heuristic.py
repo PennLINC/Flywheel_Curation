@@ -218,7 +218,7 @@ def gather_session_indeces():
         v = sorted(v, key=lambda x: x.timestamp)
 
         for i, y in enumerate(v):
-            sess_dict[y.label] = i + 2
+            sess_dict[y.label] = "PNC" + str(i + 2)
 
     # return to main namespace
     return sess_dict

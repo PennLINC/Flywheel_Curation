@@ -260,7 +260,7 @@ def gather_session_indeces():
 
             # loop through the sessions and assign the session label an index
             for i, y in enumerate(sess_list):
-                sess_dict[y.label] = i + 1
+                sess_dict[y.label] = "PNC" + str(i + 1)
 
     return sess_dict
 
