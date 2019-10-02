@@ -101,7 +101,7 @@ def infotodict(seqinfo):
         protocol = s.protocol_name.lower()
 
         # anatomical
-        if "mprage" in protocol and "nav" not in protocol and "MOSAIC" not in s.image_type:
+        if "mprage" in protocol and "nav" not in protocol and "MOSAIC" not in s.image_type and "DERIVED" not in s.image_type:
             get_latest_series(t1w, s)
         elif "t2_sag" in protocol:
             get_latest_series(t2w, s)
