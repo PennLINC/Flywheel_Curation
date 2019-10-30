@@ -53,9 +53,9 @@ dwi_run1 = create_key(
 dwi_run2 = create_key(
     'sub-{subject}/{session}/dwi/sub-{subject}_{session}_run-02_dwi')
 frac2back = create_key(
-    'sub-{subject}/{session}/func/sub-{subject}_{session}_task-frac2back')
+    'sub-{subject}/{session}/func/sub-{subject}_{session}_task-frac2back_bold')
 demo = create_key(
-    'sub-{subject}/{session}/func/sub-{subject}_{session}_task-idemo')
+    'sub-{subject}/{session}/func/sub-{subject}_{session}_task-idemo_bold')
 #
 ## ASL scans
 asl = create_key(
@@ -155,31 +155,13 @@ def infotodict(seqinfo):
     return info
 
 IntendedFor = {
-    b0_mag_multi_phasediff: [
-        '{session}/func/sub-{subject}_{session}_task-rest_acq-100_bold.nii.gz',
-        '{session}/func/sub-{subject}_{session}_task-rest_acq-singleband_bold.nii.gz',
-        '{session}/dwi/sub-{subject}_{session}_run-01_dwi.nii.gz',
-        '{session}/dwi/sub-{subject}_{session}_run-02_dwi.nii.gz',
-        '{session}/func/sub-{subject}_{session}_task-frac2back.nii.gz',
-        '{session}/func/sub-{subject}_{session}_task-idemo.nii.gz'
-    ],
-
     b0_phase_multi: [
         '{session}/func/sub-{subject}_{session}_task-rest_acq-100_bold.nii.gz',
         '{session}/func/sub-{subject}_{session}_task-rest_acq-singleband_bold.nii.gz',
         '{session}/dwi/sub-{subject}_{session}_run-01_dwi.nii.gz',
         '{session}/dwi/sub-{subject}_{session}_run-02_dwi.nii.gz',
-        '{session}/func/sub-{subject}_{session}_task-frac2back.nii.gz',
-        '{session}/func/sub-{subject}_{session}_task-idemo.nii.gz'
-    ],
-
-    b0_mag_single_phasediff: [
-        '{session}/func/sub-{subject}_{session}_task-rest_acq-100_bold.nii.gz',
-        '{session}/func/sub-{subject}_{session}_task-rest_acq-singleband_bold.nii.gz',
-        '{session}/dwi/sub-{subject}_{session}_run-01_dwi.nii.gz',
-        '{session}/dwi/sub-{subject}_{session}_run-02_dwi.nii.gz',
-        '{session}/func/sub-{subject}_{session}_task-frac2back.nii.gz',
-        '{session}/func/sub-{subject}_{session}_task-idemo.nii.gz'
+        '{session}/func/sub-{subject}_{session}_task-frac2back_bold.nii.gz',
+        '{session}/func/sub-{subject}_{session}_task-idemo_bold.nii.gz'
     ],
 
     b0_phase_single: [
@@ -187,8 +169,8 @@ IntendedFor = {
         '{session}/func/sub-{subject}_{session}_task-rest_acq-singleband_bold.nii.gz',
         '{session}/dwi/sub-{subject}_{session}_run-01_dwi.nii.gz',
         '{session}/dwi/sub-{subject}_{session}_run-02_dwi.nii.gz',
-        '{session}/func/sub-{subject}_{session}_task-frac2back.nii.gz',
-        '{session}/func/sub-{subject}_{session}_task-idemo.nii.gz'
+        '{session}/func/sub-{subject}_{session}_task-frac2back_bold.nii.gz',
+        '{session}/func/sub-{subject}_{session}_task-idemo_bold.nii.gz'
     ]
 }
 
