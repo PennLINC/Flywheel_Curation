@@ -100,6 +100,10 @@ def infotodict(seqinfo):
                 get_latest_series(rest_mb,s)
             else:
                 get_latest_series(rest_sb,s)
+
+        elif s.patient_id in s.dcm_dir_name:
+            get_latest_series(asl, s)
+
         else:
             print("Series not recognized!: ", s.protocol_name, s.dcm_dir_name)
     return info
