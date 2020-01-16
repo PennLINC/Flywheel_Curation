@@ -62,8 +62,13 @@ def acquisition_t1(acq):
 def get_task_file(sess):
 
     # get the taskfile attachment
+    attachments = sess.files
+    task_file = [x for x in attachments if "task.zip" in x.name]
 
-    return None
+    if task_file:
+        return task_file[0]
+    else:
+        return None
 
 print("Gathering input files for each session")
 t1s = {}
@@ -90,7 +95,8 @@ xcp = fw.lookup('gears/xcpengine-fw')
 designFile = [x for x in proj.files if x.name == "task_alpraz_acompcor.dsn"][0] # DESIGN FILE IS LOCATED HERE
 designFile = proj.get_file(designFile.name)
 
-xcp_runs = {}
+xcp_successful_runs = {}
+xcp_failed_runs = {}
 
 exclude = [] # this list is empty
 
@@ -103,27 +109,30 @@ for num, ses in enumerate(sessions):
         t1 = t1s[ses.label]
         taskfile = taskfiles[ses.label]
 
-        if all([fmriprep, t1]):
-            print(ses.label, " has all required inputs")
+        if all([fmriprep, t1, taskfile]):
+            print(ses.label, " has all required inputs\n")
             myconfig = {
                 'analysis_type': 'xcp',
-                'task_name': ''
+                'task_name': 'emotionid'
             }
 
             myinputs = {
                 'fmriprepdir': fmriprep,
                 'designfile': designFile,
-                'img': t1,
+                #'img': t1,
                 'taskfile': taskfile
             }
 
             print("running XCP engine")
-            #run = xcp.run(analysis_label="XCP_task_{}".format(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())), destination=ses, inputs=myinputs, config=myconfig) # UNCOMMENT
+            run = xcp.run(analysis_label="XCP_task-emotionid_acq-acompcor_{}".format(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())), destination=ses, inputs=myinputs, config=myconfig) # UNCOMMENT
 
-            #xcp_runs[ses.label] = run.id #UNCOMMENT
+            xcp_successful_runs[ses.label] = run #UNCOMMENT
 
         else:
-            print(ses.label, " incomplete inputs")
-            xcp_runs[ses.label] = None
+            print(ses.label, " has incomplete inputs\n")
+            xcp_failed_runs[ses.label] = None
 
-print(xcp_runs)
+print("\nSuccessful Runs:")
+print(xcp_successful_runs)
+print("\nFailed Runs:")
+print(xcp_failed_runs)
