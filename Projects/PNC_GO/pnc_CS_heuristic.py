@@ -77,7 +77,7 @@ dwi_run1 = create_key(
 dwi_run2 = create_key(
     'sub-{subject}/{session}/dwi/sub-{subject}_{session}_run-02_dwi')
 frac2back = create_key(
-    'sub-{subject}/{session}/func/sub-{subject}_{session}_task-frac2back_bold')
+    'sub-{subject}/{session}/func/sub-{subject}_{session}_task-frac2back_run-[seqitem]_bold')
 go2back = create_key(
     'sub-{subject}/{session}/func/sub-{subject}_{session}_task-go2back_bold')
 hero = create_key(
