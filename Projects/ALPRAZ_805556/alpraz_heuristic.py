@@ -73,5 +73,5 @@ def infotodict(seqinfo):
 
     else:
         print("Session files complete")
-
+    print(info)
     return info

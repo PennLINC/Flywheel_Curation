@@ -74,8 +74,13 @@ print("Gathering input files for each session")
 t1s = {}
 fmripreps = {}
 taskfiles = {}
+#incomplete = ['002137', '002112', '001513']
 
 for num, ses in enumerate(sessions):
+
+#    if ses.label not in incomplete:
+#        continue
+
     print(str(num), " of ", len(sessions))
 
     # t1
@@ -103,7 +108,7 @@ exclude = [] # this list is empty
 for num, ses in enumerate(sessions):
 
 
-    if ses.label not in exclude:
+    if ses.label:# in incomplete:
 
         fmriprep = fmripreps[ses.label]
         t1 = t1s[ses.label]
@@ -112,7 +117,7 @@ for num, ses in enumerate(sessions):
         if all([fmriprep, t1, taskfile]):
             print(ses.label, " has all required inputs\n")
             myconfig = {
-                'analysis_type': 'xcp',
+                'analysis_type': 'acompcor',
                 'task_name': 'emotionid'
             }
 
