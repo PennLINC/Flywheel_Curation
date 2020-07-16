@@ -34,13 +34,13 @@ face = create_key(
 
 # ASL scans
 asl = create_key(
-   'sub-{subject}/{session}/asl/sub-{subject}_{session}_asl')
+   'sub-{subject}/{session}/perf/sub-{subject}_{session}_asl')
 asl_dicomref = create_key(
-   'sub-{subject}/{session}/asl/sub-{subject}_{session}_acq-ref_asl')
+   'sub-{subject}/{session}/perf/sub-{subject}_{session}_acq-ref_asl')
 m0 = create_key(
-   'sub-{subject}/{session}/asl/sub-{subject}_{session}_m0')
+   'sub-{subject}/{session}/perf/sub-{subject}_{session}_m0')
 mean_perf = create_key(
-   'sub-{subject}/{session}/asl/sub-{subject}_{session}_mean-perfusion')
+   'sub-{subject}/{session}/perf/sub-{subject}_{session}_mean-perfusion')
 
 
 def infotodict(seqinfo):
@@ -112,6 +112,36 @@ MetadataExtras = {
     b0_phase: {
         "EchoTime1": 0.00412,
         "EchoTime2": 0.00658
+    },
+    asl: {
+        "PulseSequenceType": "3D_SPRIAL",
+        "PulseSequenceDetails" : "WIP" ,
+        "LabelingType": "PCASL",
+        "LabelingDuration": 1.8,
+        "PostLabelingDelay": 1.8,
+        "BackgroundSuppression": "Yes",
+        "M0":10,
+        "LabelingSlabLocation":"X",
+        "LabelingOrientation":"",
+        "LabelingDistance":2,
+        "AverageLabelingGradient": 34,
+        "SliceSelectiveLabelingGradient":45,
+        "AverageB1LabelingPulses": 0,
+        "LabelingSlabThickness":2,
+        "AcquisitionDuration":123,
+        "BackgroundSuppressionLength":2,
+        "BackgroundSuppressionPulseTime":2,
+        "VascularCrushingVenc": 2,
+        "PulseDuration": 1.8,
+        "InterPulseSpacing":4,
+        "PCASLType":"balanced",
+        "PASLType": "",
+        "LookLocker":"True",
+        "LabelingEfficiency":0.72,
+        "BolusCutOffFlag":"False",
+        "BolusCutOffTimingSequence":"False",
+        "BolusCutOffDelayTime":0,
+        "BolusCutOffTechnique":"False"
     }
 }
 
@@ -131,5 +161,21 @@ IntendedFor = {
 def ReplaceSubject(label):
     return label.lstrip("0")
 
+
 def ReplaceSession(label):
     return label.lstrip("0")
+
+
+def AttachToSession():
+
+    return ('hello2.txt', 'hello from the session level', 'text/plain')
+
+
+def AttachToSubject():
+
+    return ('hello2.txt', 'hello from the subject level', 'text/plain')
+
+
+def AttachToProject():
+
+    return ('hello2.txt', 'hello from the project level', 'text/plain')
