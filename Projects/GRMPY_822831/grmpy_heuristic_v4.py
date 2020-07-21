@@ -168,14 +168,64 @@ def ReplaceSession(label):
 
 def AttachToSession():
 
-    return ('hello2.txt', 'hello from the session level', 'text/plain')
+    # example: uploading multiple files -- a json, and a TSV
+    import json
+
+    dictionary = {
+        "id": "04",
+        "name": "foo",
+        "scan": "blah"
+    }
+
+    json_object = json.dumps(dictionary, indent = 4)
+
+    attachment1 = {
+        'name': 'jsonexample.json',
+        'data': json_object,
+        'type': 'application/json'
+    }
+
+    import pandas as pd
+    raw_data = {'first_name': ['Jason', 'Molly', 'Tina', 'Jake', 'Amy'],
+        'last_name': ['Miller', 'Jacobson', 'Ali', 'Milner', 'Cooze'],
+        'age': [42, 52, 36, 24, 73],
+        'preTestScore': [4, 24, 31, 2, 3],
+        'postTestScore': [25, 94, 57, 62, 70]}
+    df = pd.DataFrame(raw_data, columns = ['first_name', 'last_name', 'age', 'preTestScore', 'postTestScore'])
+
+    attachment2 = {
+        'name': '{subject}/{session}/perf/{subject}_{session}_aslcontext.tsv',
+        'data': df.to_csv(index=False, sep='\t'),
+        'type': 'text/tab-separated-values'
+    }
+
+    return [attachment1, attachment2]
 
 
 def AttachToSubject():
 
-    return ('hello2.txt', 'hello from the subject level', 'text/plain')
+    # example: uploading a simple text file
+    return {'name':'hello2.txt', 'data':'hello from the subject level', 'type':'text/plain'}
 
 
 def AttachToProject():
 
-    return ('hello2.txt', 'hello from the project level', 'text/plain')
+    # example: uploading a single dataset_description
+
+    import json
+
+    dictionary ={
+        "id": "04",
+        "name": "foo",
+        "scan": "blah"
+    }
+
+    json_object = json.dumps(dictionary, indent = 4)
+
+    attachment1 = {
+        'name': 'dataset_description2.json',
+        'data': json_object,
+        'type': 'application/json'
+    }
+
+    return attachment1
