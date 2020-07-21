@@ -171,13 +171,13 @@ def AttachToSession():
     # example: uploading multiple files -- a json, and a TSV
     import json
 
-    dictionary = {
+    adict = {
         "id": "04",
         "name": "foo",
         "scan": "blah"
     }
 
-    json_object = json.dumps(dictionary, indent = 4)
+    json_object = json.dumps(adict, indent = 4)
 
     attachment1 = {
         'name': 'jsonexample.json',
@@ -202,25 +202,19 @@ def AttachToSession():
     return [attachment1, attachment2]
 
 
-def AttachToSubject():
-
-    # example: uploading a simple text file
-    return {'name':'hello2.txt', 'data':'hello from the subject level', 'type':'text/plain'}
-
-
 def AttachToProject():
 
     # example: uploading a single dataset_description
 
     import json
 
-    dictionary ={
+    adict = {
         "id": "04",
         "name": "foo",
         "scan": "blah"
     }
 
-    json_object = json.dumps(dictionary, indent = 4)
+    json_object = json.dumps(adict, indent = 4)
 
     attachment1 = {
         'name': 'dataset_description2.json',
