@@ -15,10 +15,10 @@ def ReplaceSubject(subj_label):
     return subj_label.lstrip('0')
 
 t1w = create_key('sub-{subject}/{session}/anat/sub-{subject}_{session}_T1w')
-asl = create_key('sub-{subject}/{session}/anat/sub-{subject}_{session}_asl')
-asl_moco = create_key('sub-{subject}/{session}/anat/sub-{subject}_{session}_acq-moco_asl')
-m0scan = create_key('sub-{subject}/{session}/anat/sub-{subject}_{session}_m0scan')
-m0scan_moco = create_key('sub-{subject}/{session}/anat/sub-{subject}_{session}_acq-moco_m0scan')
+asl = create_key('sub-{subject}/{session}/perf/sub-{subject}_{session}_asl')
+asl_moco = create_key('sub-{subject}/{session}/perf/sub-{subject}_{session}_acq-moco_asl')
+m0scan = create_key('sub-{subject}/{session}/perf/sub-{subject}_{session}_m0scan')
+m0scan_moco = create_key('sub-{subject}/{session}/perf/sub-{subject}_{session}_acq-moco_m0scan')
 #t1w_moco = create_key('sub-{subject}/{session}/anat/sub-{subject}_{session}_acq-moco_run-{item:02d}_T1w')
 
 def gather_session_indeces():
@@ -62,7 +62,7 @@ def ReplaceSession(ses_label):
 
 def infotodict(seqinfo):
     # create the heuristic
-    info = {t1w: [], asl: [], m0scan: []}
+    info = {t1w: [], asl: [], asl_moco: [], m0scan: [], m0scan_moco: []}
 
     for s in seqinfo:
         protocol = s.protocol_name.lower()
@@ -73,7 +73,10 @@ def infotodict(seqinfo):
             info[asl_moco].append(s.series_id)
         elif 'asl' in protocol and s.is_derived == False and s.is_motion_corrected == False:
             info[asl].append(s.series_id)
-        elif :
+        elif 'M0' in protocol and s.is_derived == False and s.is_motion_corrected == False:
+            info[m0scan].append(s.series_id)
+        elif 'M0' in protocol and s.is_derived == False and s.is_motion_corrected == True:
+            info[m0scan_moco].append(s.series_id)
 
 
     return info
