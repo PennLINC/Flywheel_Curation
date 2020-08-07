@@ -21,7 +21,7 @@ m0scan = create_key('sub-{subject}/{session}/perf/sub-{subject}_{session}_m0scan
 m0scan_moco = create_key('sub-{subject}/{session}/perf/sub-{subject}_{session}_acq-moco_m0scan')
 #t1w_moco = create_key('sub-{subject}/{session}/anat/sub-{subject}_{session}_acq-moco_run-{item:02d}_T1w')
 
-def gather_session_indeces():
+def gather_session_indices():
 
     # use flywheel to gather a dict of all session session_labels
     # with their corresponding index by time, within the subject
@@ -53,7 +53,7 @@ def gather_session_indeces():
 
     return sess_dict
 
-sessions = gather_session_indeces()
+sessions = gather_session_indices()
 
 def ReplaceSession(ses_label):
     return str(sessions[ses_label])
