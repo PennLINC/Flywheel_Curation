@@ -166,3 +166,7 @@ def infotodict(seqinfo):
 
 
     return info
+
+#intendedfor's
+
+    
