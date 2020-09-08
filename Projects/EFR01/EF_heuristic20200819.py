@@ -176,16 +176,14 @@ IntendedFor = {
         'sub-{subject}/{session}/dwi/sub-{subject}_{session}_acq-multiband_dwi'
     ],
     fmap_ap_bold: [
-        'sub-{subject}/ses-{session}/func/sub-{subject}_ses-{session}_task-restbold_run-1_bold'
-        'sub-{subject}/ses-{session}/func/sub-{subject}_ses-{session}_task-restbold_run-2_bold'
-        'sub-{subject}/ses-{session}/func/sub-{subject}_ses-{session}_task-restbold_run-{item}_bold'
+        'sub-{subject}/ses-{session}/func/sub-{subject}_ses-{session}_task-restbold_run-1_bold',
+        'sub-{subject}/ses-{session}/func/sub-{subject}_ses-{session}_task-restbold_run-2_bold',
         'sub-{subject}/{session}/func/sub-{subject}_{session}_task-fracback_acq-singleband_bold'
 
     ],
     fmap_pa_bold: [
-        'sub-{subject}/ses-{session}/func/sub-{subject}_ses-{session}_task-restbold_run-1_bold'
-        'sub-{subject}/ses-{session}/func/sub-{subject}_ses-{session}_task-restbold_run-2_bold'
-        'sub-{subject}/ses-{session}/func/sub-{subject}_ses-{session}_task-restbold_run-{item}_bold'
+        'sub-{subject}/ses-{session}/func/sub-{subject}_ses-{session}_task-restbold_run-1_bold',
+        'sub-{subject}/ses-{session}/func/sub-{subject}_ses-{session}_task-restbold_run-2_bold',
         'sub-{subject}/{session}/func/sub-{subject}_{session}_task-fracback_acq-singleband_bold'
     ]
 }
