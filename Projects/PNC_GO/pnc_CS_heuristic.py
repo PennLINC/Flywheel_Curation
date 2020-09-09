@@ -40,6 +40,10 @@ Series not recognized!:  localizer localizer_9_i00002.nii.gz
 Series not recognized!:  localizer localizer_1_i00002.nii.gz
 '''
 
+'''
+testing on fw-heudiconv-curate --project PNC_CS_810336 --subject 128691 --heuristic pnc_CS_heuristic.py
+'''
+
 
 def create_key(template, outtype=('nii.gz',), annotation_classes=None):
     if template is None or not template:
@@ -84,16 +88,12 @@ hero = create_key(
     'sub-{subject}/{session}/func/sub-{subject}_{session}_task-hero_bold')
 demo = create_key(
     'sub-{subject}/{session}/func/sub-{subject}_{session}_task-idemo_bold')
-#
+
 ## ASL scans
 asl = create_key(
-   'sub-{subject}/{session}/asl/sub-{subject}_{session}_asl')
-#asl_dicomref = create_key(
-#   'sub-{subject}/{session}/asl/sub-{subject}_{session}_acq-ref_asl')
+   'sub-{subject}/{session}/perf/sub-{subject}_{session}_asl')
 m0 = create_key(
-   'sub-{subject}/{session}/asl/sub-{subject}_{session}_m0')
-#mean_perf = create_key(
-#   'sub-{subject}/{session}/asl/sub-{subject}_{session}_mean-perfusion')
+   'sub-{subject}/{session}/perf/sub-{subject}_{session}_m0scan')
 
 
 def infotodict(seqinfo):
@@ -158,7 +158,7 @@ def infotodict(seqinfo):
         elif "pcasl" in protocol:
             if s.series_description.endswith("_M0"):
                 get_latest_series(m0, s)
-            elif "MoCo" in s.series_description:
+            elif "MoCo" in s.series_description and 'water' not in protocol and 'gre' not in protocol:
                 get_latest_series(asl, s)
 
         elif "frac2back" in protocol:
@@ -190,7 +190,9 @@ IntendedFor = {
         '{session}/dwi/sub-{subject}_{session}_run-01_dwi.nii.gz',
         '{session}/dwi/sub-{subject}_{session}_run-02_dwi.nii.gz',
         '{session}/func/sub-{subject}_{session}_task-frac2back_bold.nii.gz',
-        '{session}/func/sub-{subject}_{session}_task-idemo_bold.nii.gz'
+        '{session}/func/sub-{subject}_{session}_task-idemo_bold.nii.gz',
+        '{session}/perf/sub-{subject}_{session}_asl.nii.gz',
+        '{session}/perf/sub-{subject}_{session}_m0scan.nii.gz'
     ],
 
     b0_phase_single: [
@@ -199,9 +201,59 @@ IntendedFor = {
         '{session}/dwi/sub-{subject}_{session}_run-01_dwi.nii.gz',
         '{session}/dwi/sub-{subject}_{session}_run-02_dwi.nii.gz',
         '{session}/func/sub-{subject}_{session}_task-frac2back_bold.nii.gz',
-        '{session}/func/sub-{subject}_{session}_task-idemo_bold.nii.gz'
+        '{session}/func/sub-{subject}_{session}_task-idemo_bold.nii.gz',
+        '{session}/perf/sub-{subject}_{session}_asl.nii.gz',
+        '{session}/perf/sub-{subject}_{session}_m0scan.nii.gz'
     ]
 }
+
+MetadataExtras = {
+    asl : { "PulseSequenceType": "2D",
+            "PulseSequenceDetails" : "WIP" ,
+            "LabelingType": "PCASL",
+            "LabelingDuration": 1.5088,
+            "PostLabelingDelay": 1.2,
+            "BackgroundSuppression": "Yes",
+            "M0":1,
+            "LabelingSlabLocation":"X",
+            "LabelingOrientation":"",
+            "LabelingDistance":2,
+            "AverageLabelingGradient": 34,
+            "SliceSelectiveLabelingGradient":45,
+            "AverageB1LabelingPulses": 0,
+            "LabelingSlabThickness":2,
+            "AcquisitionDuration":123,
+            "PulseDuration": 1.5088,
+            "InterPulseSpacing":4,
+            "PCASLType":"balanced",
+            "PASLType": "",
+            "LookLocker":"True",
+            "LabelingEfficiency":0.72,
+            "BolusCutOffFlag":"False",
+            "BolusCutOffTimingSequence":"False",
+            "BolusCutOffDelayTime":0,
+            "BolusCutOffTechnique":"False"
+        }
+}
+
+
+def AttachToSession():
+
+    NUM_VOLUMES=80
+    data = ['label', 'control'] * int(NUM_VOLUMES/2)
+    data = '\n'.join(data)
+    data = 'volume_type\n' + data # the data is now a string; perfect!
+
+    output_file = {
+
+      'name': '{subject}_{session}_aslcontext.tsv',
+      'data': data,
+      'type': 'text/tab-separated-values'
+    }
+
+    return output_file
+
+
 
 def gather_session_indeces():
 
