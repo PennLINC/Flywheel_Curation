@@ -169,3 +169,5 @@ dmypy.json
 
 sandbox/
 data/
+.Rproj.user
+*.Rproj

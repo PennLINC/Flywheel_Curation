@@ -90,8 +90,10 @@ demo = create_key(
     'sub-{subject}/{session}/func/sub-{subject}_{session}_task-idemo_bold')
 
 ## ASL scans
-asl = create_key(
-   'sub-{subject}/{session}/perf/sub-{subject}_{session}_asl')
+asl_gre = create_key(
+   'sub-{subject}/{session}/perf/sub-{subject}_{session}_acq-gre_asl')
+asl_se = create_key(
+  'sub-{subject}/{session}/perf/sub-{subject}_{session}_acq-se_asl')
 m0 = create_key(
    'sub-{subject}/{session}/perf/sub-{subject}_{session}_m0scan')
 
@@ -116,7 +118,7 @@ def infotodict(seqinfo):
             rest_bold_100: [], rest_bold_124: [], rest_bold_204: [],
             hero: [], go2back: [], frac2back: [], demo: [],  # pe_rev:[], rest_sb:[],
             # asl_dicomref:[], face:[], asl:[],
-            m0: [], asl: []  # , mean_perf:[]
+            m0: [], asl_se: [], asl_gre:[]
             }
 
     def get_latest_series(key, s):
@@ -156,10 +158,16 @@ def infotodict(seqinfo):
                 get_latest_series(dwi_run2, s)
 
         elif "pcasl" in protocol:
+            if 'water' in protocol:
+                # two subjects have a protocol called WATEREXCITE; assuming this
+                # can be ignored
+                continue
             if s.series_description.endswith("_M0"):
                 get_latest_series(m0, s)
-            elif "MoCo" in s.series_description and 'water' not in protocol and 'gre' not in protocol:
-                get_latest_series(asl, s)
+            elif "gre" in protocol and "MOCO" not in s.image_type:
+                get_latest_series(asl_gre, s)
+            elif "se" in protocol and "MOCO" not in s.image_type:
+                get_latest_series(asl_se, s)
 
         elif "frac2back" in protocol:
             get_latest_series(frac2back, s)
@@ -191,7 +199,8 @@ IntendedFor = {
         '{session}/dwi/sub-{subject}_{session}_run-02_dwi.nii.gz',
         '{session}/func/sub-{subject}_{session}_task-frac2back_bold.nii.gz',
         '{session}/func/sub-{subject}_{session}_task-idemo_bold.nii.gz',
-        '{session}/perf/sub-{subject}_{session}_asl.nii.gz',
+        '{session}/perf/sub-{subject}_{session}_acq-gre_asl.nii.gz',
+        '{session}/perf/sub-{subject}_{session}_acq-se_asl.nii.gz',
         '{session}/perf/sub-{subject}_{session}_m0scan.nii.gz'
     ],
 
@@ -202,13 +211,40 @@ IntendedFor = {
         '{session}/dwi/sub-{subject}_{session}_run-02_dwi.nii.gz',
         '{session}/func/sub-{subject}_{session}_task-frac2back_bold.nii.gz',
         '{session}/func/sub-{subject}_{session}_task-idemo_bold.nii.gz',
-        '{session}/perf/sub-{subject}_{session}_asl.nii.gz',
+        '{session}/perf/sub-{subject}_{session}_acq-gre_asl.nii.gz',
+        '{session}/perf/sub-{subject}_{session}_acq-se_asl.nii.gz',
         '{session}/perf/sub-{subject}_{session}_m0scan.nii.gz'
     ]
 }
 
 MetadataExtras = {
-    asl : { "PulseSequenceType": "2D",
+    asl_gre : { "PulseSequenceType": "2D",
+            "PulseSequenceDetails" : "WIP" ,
+            "LabelingType": "PCASL",
+            "LabelingDuration": 1.5088,
+            "PostLabelingDelay": 1.2,
+            "BackgroundSuppression": "Yes",
+            "M0":1,
+            "LabelingSlabLocation":"X",
+            "LabelingOrientation":"",
+            "LabelingDistance":2,
+            "AverageLabelingGradient": 34,
+            "SliceSelectiveLabelingGradient":45,
+            "AverageB1LabelingPulses": 0,
+            "LabelingSlabThickness":2,
+            "AcquisitionDuration":123,
+            "PulseDuration": 1.5088,
+            "InterPulseSpacing":4,
+            "PCASLType":"balanced",
+            "PASLType": "",
+            "LookLocker":"True",
+            "LabelingEfficiency":0.72,
+            "BolusCutOffFlag":"False",
+            "BolusCutOffTimingSequence":"False",
+            "BolusCutOffDelayTime":0,
+            "BolusCutOffTechnique":"False"
+        },
+    asl_se : { "PulseSequenceType": "2D",
             "PulseSequenceDetails" : "WIP" ,
             "LabelingType": "PCASL",
             "LabelingDuration": 1.5088,
