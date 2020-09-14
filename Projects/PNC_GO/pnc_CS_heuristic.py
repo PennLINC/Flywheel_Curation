@@ -304,14 +304,26 @@ def AttachToSession():
     data = '\n'.join(data)
     data = 'volume_type\n' + data # the data is now a string; perfect!
 
-    output_file = {
+    output_file1 = {
 
-      'name': '{subject}/{session}/perf/{subject}_{session}_aslcontext.tsv',
+      'name': '{subject}/{session}/perf/{subject}_{session}_acq-se_aslcontext.tsv',
       'data': data,
       'type': 'text/tab-separated-values'
     }
 
-    return output_file
+    NUM_VOLUMES=50
+    data = ['label', 'control'] * int(NUM_VOLUMES/2)
+    data = '\n'.join(data)
+    data = 'volume_type\n' + data # the data is now a string; perfect!
+
+    output_file2 = {
+
+      'name': '{subject}/{session}/perf/{subject}_{session}_acq-gre_aslcontext.tsv',
+      'data': data,
+      'type': 'text/tab-separated-values'
+    }
+
+    return [output_file1, output_file2]
 
 
 
