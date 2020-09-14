@@ -214,6 +214,30 @@ IntendedFor = {
         '{session}/perf/sub-{subject}_{session}_acq-gre_asl.nii.gz',
         '{session}/perf/sub-{subject}_{session}_acq-se_asl.nii.gz',
         '{session}/perf/sub-{subject}_{session}_m0scan.nii.gz'
+    ],
+
+    b0_mag_multi_phasediff: [
+        '{session}/func/sub-{subject}_{session}_task-rest_acq-100_bold.nii.gz',
+        '{session}/func/sub-{subject}_{session}_task-rest_acq-singleband_bold.nii.gz',
+        '{session}/dwi/sub-{subject}_{session}_run-01_dwi.nii.gz',
+        '{session}/dwi/sub-{subject}_{session}_run-02_dwi.nii.gz',
+        '{session}/func/sub-{subject}_{session}_task-frac2back_bold.nii.gz',
+        '{session}/func/sub-{subject}_{session}_task-idemo_bold.nii.gz',
+        '{session}/perf/sub-{subject}_{session}_acq-gre_asl.nii.gz',
+        '{session}/perf/sub-{subject}_{session}_acq-se_asl.nii.gz',
+        '{session}/perf/sub-{subject}_{session}_m0scan.nii.gz'
+    ],
+
+    b0_mag_single_phasediff: [
+        '{session}/func/sub-{subject}_{session}_task-rest_acq-100_bold.nii.gz',
+        '{session}/func/sub-{subject}_{session}_task-rest_acq-singleband_bold.nii.gz',
+        '{session}/dwi/sub-{subject}_{session}_run-01_dwi.nii.gz',
+        '{session}/dwi/sub-{subject}_{session}_run-02_dwi.nii.gz',
+        '{session}/func/sub-{subject}_{session}_task-frac2back_bold.nii.gz',
+        '{session}/func/sub-{subject}_{session}_task-idemo_bold.nii.gz',
+        '{session}/perf/sub-{subject}_{session}_acq-gre_asl.nii.gz',
+        '{session}/perf/sub-{subject}_{session}_acq-se_asl.nii.gz',
+        '{session}/perf/sub-{subject}_{session}_m0scan.nii.gz'
     ]
 }
 
@@ -282,7 +306,7 @@ def AttachToSession():
 
     output_file = {
 
-      'name': '{subject}_{session}_aslcontext.tsv',
+      'name': '{subject}/{session}/perf/{subject}_{session}_aslcontext.tsv',
       'data': data,
       'type': 'text/tab-separated-values'
     }
