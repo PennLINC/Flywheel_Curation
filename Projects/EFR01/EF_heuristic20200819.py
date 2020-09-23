@@ -217,3 +217,19 @@ MetadataExtras = {
         "BolusCutOffTechnique":"False"
     }
 }
+
+def AttachToSession():
+
+    NUM_VOLUMES=80
+    data = ['label', 'control'] * NUM_VOLUMES
+    data = '\n'.join(data)
+    data = 'volume_type\n' + data # the data is now a string; perfect!
+
+    output_file = {
+
+      'name': '{subject}_{session}_aslcontext.tsv',
+      'data': data,
+      'type': 'text/tab-separated-values'
+    }
+
+    return output_file
