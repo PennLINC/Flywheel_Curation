@@ -187,3 +187,33 @@ IntendedFor = {
         'sub-{subject}/{session}/func/sub-{subject}_{session}_task-fracback_acq-singleband_bold'
     ]
 }
+
+#ASLmetadata:
+MetadataExtras = {
+    asl: {
+        "PulseSequenceType": "3D",
+        "PulseSequenceDetails" : "WIP" ,
+        "LabelingType": "PCASL",
+        "LabelingDuration": 1.500,
+        "PostLabelingDelay": 1.500,
+        "BackgroundSuppression": "Yes",
+        "M0":"perf/sub-xx_m0scan.nii.gz",
+        "LabelingSlabLocation":"X",
+        "LabelingOrientation":"",
+        "LabelingDistance":2,
+        "AverageLabelingGradient": 34,
+        "SliceSelectiveLabelingGradient":45,
+        "AverageB1LabelingPulses": 0,
+        "LabelingSlabThickness":2,
+        "AcquisitionDuration":123,
+        "InterPulseSpacing":4,
+        "PCASLType":"balanced",
+        "PASLType": "",
+        "LookLocker":"True",
+        "LabelingEfficiency":0.85,
+        "BolusCutOffFlag":"False",
+        "BolusCutOffTimingSequence":"False",
+        "BolusCutOffDelayTime":0,
+        "BolusCutOffTechnique":"False"
+    }
+}
