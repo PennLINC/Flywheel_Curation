@@ -98,9 +98,9 @@ def infotodict(seqinfo):
             append_series(t2w, s)
         elif "abcd_t2w_spc_vnav" in protocol and "setter" not in series_description:
             append_series(t2w, s)
+    #func scans
         elif "fracnoback" in protocol:
             append_series(fracback, s)
-    #func scans
         elif "frac-no-back" in protocol:
             append_series(fracback, s)
         elif "rest" in protocol:
@@ -179,7 +179,6 @@ IntendedFor = {
         'sub-{subject}/ses-{session}/func/sub-{subject}_ses-{session}_task-restbold_run-1_bold',
         'sub-{subject}/ses-{session}/func/sub-{subject}_ses-{session}_task-restbold_run-2_bold',
         'sub-{subject}/{session}/func/sub-{subject}_{session}_task-fracback_acq-singleband_bold'
-
     ],
     fmap_pa_bold: [
         'sub-{subject}/ses-{session}/func/sub-{subject}_ses-{session}_task-restbold_run-1_bold',
@@ -220,7 +219,7 @@ MetadataExtras = {
 
 def AttachToSession():
 
-    NUM_VOLUMES=80
+    NUM_VOLUMES=40
     data = ['label', 'control'] * NUM_VOLUMES
     data = '\n'.join(data)
     data = 'volume_type\n' + data # the data is now a string; perfect!
