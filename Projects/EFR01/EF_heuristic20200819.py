@@ -170,20 +170,21 @@ def infotodict(seqinfo):
 #intendedfor's
 IntendedFor = {
     fmap_pa_diff: [
-        'sub-{subject}/{session}/dwi/sub-{subject}_{session}_acq-multiband_dwi'
+        '{session}/dwi/sub-{subject}_{session}_acq-multiband_dwi.nii.gz'
+#correct
     ],
     fmap_ap_diff: [
-        'sub-{subject}/{session}/dwi/sub-{subject}_{session}_acq-multiband_dwi'
+        '{session}/dwi/sub-{subject}_{session}_acq-multiband_dwi.nii.gz'
     ],
     fmap_ap_bold: [
-        'sub-{subject}/ses-{session}/func/sub-{subject}_ses-{session}_task-restbold_run-1_bold',
-        'sub-{subject}/ses-{session}/func/sub-{subject}_ses-{session}_task-restbold_run-2_bold',
-        'sub-{subject}/{session}/func/sub-{subject}_{session}_task-fracback_acq-singleband_bold'
+        '{session}/func/sub-{subject}_{session}_task-restbold_run-1_bold.nii.gz',
+        '{session}/func/sub-{subject}_{session}_task-restbold_run-2_bold.nii.gz',
+        '{session}/func/sub-{subject}_{session}_task-fracback_acq-singleband_bold.nii.gz'
     ],
     fmap_pa_bold: [
-        'sub-{subject}/ses-{session}/func/sub-{subject}_ses-{session}_task-restbold_run-1_bold',
-        'sub-{subject}/ses-{session}/func/sub-{subject}_ses-{session}_task-restbold_run-2_bold',
-        'sub-{subject}/{session}/func/sub-{subject}_{session}_task-fracback_acq-singleband_bold'
+        '{session}/func/sub-{subject}_{session}_task-restbold_run-1_bold.nii.gz',
+        '{session}/func/sub-{subject}_{session}_task-restbold_run-2_bold.nii.gz',
+        '{session}/func/sub-{subject}_{session}_task-fracback_acq-singleband_bold.nii.gz'
     ]
 }
 
