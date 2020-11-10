@@ -34,13 +34,13 @@ face = create_key(
 
 # ASL scans
 asl = create_key(
-   'sub-{subject}/{session}/asl/sub-{subject}_{session}_asl')
+   'sub-{subject}/{session}/perf/sub-{subject}_{session}_asl')
 asl_dicomref = create_key(
-   'sub-{subject}/{session}/asl/sub-{subject}_{session}_acq-ref_asl')
+   'sub-{subject}/{session}/perf/sub-{subject}_{session}_acq-ref_asl')
 m0 = create_key(
-   'sub-{subject}/{session}/asl/sub-{subject}_{session}_m0')
-mean_perf = create_key(
-   'sub-{subject}/{session}/asl/sub-{subject}_{session}_mean-perfusion')
+   'sub-{subject}/{session}/perf/sub-{subject}_{session}_m0')
+#mean_perf = create_key(
+   #'sub-{subject}/{session}/perf/sub-{subject}_{session}_mean-perfusion')
 
 
 def infotodict(seqinfo):
@@ -59,7 +59,7 @@ def infotodict(seqinfo):
     info = {t1w:[], t2w:[], dwi:[], b0_phase:[],
             b0_mag:[], pe_rev:[], rest_mb:[], rest_sb:[],
             fracback:[], asl_dicomref:[], face:[], asl:[],
-            m0:[], mean_perf:[]}
+            m0:[], #mean_perf:[]}
 
     def get_latest_series(key, s):
     #    if len(info[key]) == 0:
@@ -88,8 +88,8 @@ def infotodict(seqinfo):
             get_latest_series(asl_dicomref, s)
         elif s.series_description.endswith("_M0"):
             get_latest_series(m0, s)
-        elif s.series_description.endswith("_MeanPerf"):
-            get_latest_series(mean_perf, s)
+        #elif s.series_description.endswith("_MeanPerf"):
+            #get_latest_series(mean_perf, s)
 
         elif "fracback" in protocol:
             get_latest_series(fracback, s)

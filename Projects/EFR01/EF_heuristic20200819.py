@@ -18,8 +18,8 @@ asl=create_key(
    'sub-{subject}/{session}/perf/sub-{subject}_{session}_asl')
 m0=create_key(
    'sub-{subject}/{session}/perf/sub-{subject}_{session}_m0')
-mean_perf=create_key(
-   'sub-{subject}/{session}/perf/sub-{subject}_{session}_mean-perfusion')
+#mean_perf=create_key(
+   #'sub-{subject}/{session}/perf/sub-{subject}_{session}_mean-perfusion')
 #qsm_mag_1= create_key(
     #'sub-{subject}/ses-{session}/swi/sub-{subject}_ses-{session}_part-mag_echo-1_rec-norm_GRE')
 #qsm_mag_2= create_key(
@@ -77,7 +77,7 @@ def infotodict(seqinfo):
     last_run=len(seqinfo)
 
     info = {t1w: [], t2w: [], ABCD_rest: [], func_rest_run_1: [], func_rest_run_2: [], fracback: [],
-             dwi: [], asl: [], m0: [], mean_perf: [], #qsm_mag_1: [], qsm_mag_2: [], qsm_mag_3: [],
+             dwi: [], asl: [], m0: [], #mean_perf: [], #qsm_mag_1: [], qsm_mag_2: [], qsm_mag_3: [],
             #qsm_mag_4: [], qsm_phase_1: [], qsm_phase_2: [], qsm_phase_3: [], qsm_phase_4: [],
             fmap_pa_diff: [], fmap_ap_diff: [], fmap_ap_bold: [], fmap_pa_bold:[]}
 
@@ -117,8 +117,8 @@ def infotodict(seqinfo):
             append_series(asl, s)
         elif s.series_description.endswith("_M0"):
             append_series(m0, s)
-        elif s.series_description.endswith("_MeanPerf"):
-            append_series(mean_perf, s)
+        #elif s.series_description.endswith("_MeanPerf"):
+            #append_series(mean_perf, s)
     #swi scans
         #elif "qsm" in protocol and not s.is_derived and "NORM" in s.image_type:
             #if s.dcm_dir_name.endswith('e1.nii.gz'):
