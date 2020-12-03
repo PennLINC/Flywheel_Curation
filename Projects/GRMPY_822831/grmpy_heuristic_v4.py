@@ -1,4 +1,5 @@
 import os
+import ipdb
 
 
 def create_key(template, outtype=('nii.gz',), annotation_classes=None):
@@ -34,11 +35,11 @@ face = create_key(
 
 # ASL scans
 asl = create_key(
-   'sub-{subject}/{session}/perf/sub-{subject}_{session}_asl')
-asl_dicomref = create_key(
-   'sub-{subject}/{session}/perf/sub-{subject}_{session}_acq-ref_asl')
+   'sub-{subject}/{session}/perf/sub-{subject}_{session}_task-rest_asl')
+#asl_dicomref = create_key(
+   #'sub-{subject}/{session}/perf/sub-{subject}_{session}_acq-ref_asl')
 m0 = create_key(
-   'sub-{subject}/{session}/perf/sub-{subject}_{session}_m0')
+   'sub-{subject}/{session}/perf/sub-{subject}_{session}_task-rest_m0scan')
 #mean_perf = create_key(
    #'sub-{subject}/{session}/perf/sub-{subject}_{session}_mean-perfusion')
 
@@ -58,8 +59,8 @@ def infotodict(seqinfo):
 
     info = {t1w:[], t2w:[], dwi:[], b0_phase:[],
             b0_mag:[], pe_rev:[], rest_mb:[], rest_sb:[],
-            fracback:[], asl_dicomref:[], face:[], asl:[],
-            m0:[], #mean_perf:[]}
+            fracback:[], face:[], asl:[],
+            m0:[]}
 
     def get_latest_series(key, s):
     #    if len(info[key]) == 0:
@@ -69,6 +70,7 @@ def infotodict(seqinfo):
 
     for s in seqinfo:
         protocol = s.protocol_name.lower()
+        #ipdb.set_trace()
         if "mprage" in protocol:
             get_latest_series(t1w,s)
         elif "t2_sag" in protocol:
@@ -84,14 +86,14 @@ def infotodict(seqinfo):
 
         elif s.series_description.endswith("_ASL"):
             get_latest_series(asl, s)
-        elif protocol.startswith("asl_dicomref"):
-            get_latest_series(asl_dicomref, s)
+        #elif protocol.startswith("asl_dicomref"):
+            #get_latest_series(asl_dicomref, s)
         elif s.series_description.endswith("_M0"):
             get_latest_series(m0, s)
         #elif s.series_description.endswith("_MeanPerf"):
             #get_latest_series(mean_perf, s)
 
-        elif "fracback" in protocol:
+        elif "fracback" in protocol or "fracnoback" in protocol:
             get_latest_series(fracback, s)
         elif "face" in protocol:
             get_latest_series(face,s)
@@ -125,6 +127,9 @@ IntendedFor = {
     b0_mag: [],
     pe_rev: [
         '{session}/dwi/sub-{subject}_{session}_acq-multiband_dwi.nii.gz',
+    ],
+    m0: [
+        '{session}/perf/sub-{subject}_{session}_task-rest_asl'
     ]
 }
 
