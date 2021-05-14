@@ -1,69 +1,245 @@
-### This heuristic organizes 22Q (812481) data on Flywheel
-###
-### Ellyn Butler
-### September 6, 2019
+'''
+Heuristic to curate the 22Q_812481 project.
+Katja Zoner
+Updated: 04/16/2021
+'''
 
 import os
 
-# create a key
+##################### Create keys for each acquisition type ####################
+
 def create_key(template, outtype=('nii.gz',), annotation_classes=None):
     if template is None or not template:
         raise ValueError('Template must be a valid format string')
     return template, outtype, annotation_classes
 
-def ReplaceSubject(subj_label):
-    return subj_label.lstrip('0')
+# Structural scans
+t1w = create_key(
+    'sub-{subject}/{session}/anat/sub-{subject}_{session}_T1w')
 
-t1w = create_key('sub-{subject}/{session}/anat/sub-{subject}_{session}_T1w')
-rest_bold_124 = create_key('sub-{subject}/{session}/func/sub-{subject}_{session}_task-rest_acq-124_bold')
+# fMRI scans
+rest_bold_124 = create_key(
+    'sub-{subject}/{session}/func/sub-{subject}_{session}_task-rest_acq-singleband_bold')
+demo = create_key(
+    'sub-{subject}/{session}/func/sub-{subject}_{session}_task-idemo_bold')
+#jolo = create_key(
+#    'sub-{subject}/{session}/func/sub-{subject}_{session}_task-jolo_bold')
 
-def gather_session_indeces():
+# Diffusion weighted scans
+dwi_run1 = create_key(
+    'sub-{subject}/{session}/dwi/sub-{subject}_{session}_run-01_dwi')
+dwi_run2 = create_key(
+    'sub-{subject}/{session}/dwi/sub-{subject}_{session}_run-02_dwi')
 
-    # use flywheel to gather a dict of all session session_labels
-    # with their corresponding index by time, within the subject
+# Field maps
+b0_mag = create_key(
+    'sub-{subject}/{session}/fmap/sub-{subject}_{session}_magnitude{item}')
+b0_phase = create_key(
+    'sub-{subject}/{session}/fmap/sub-{subject}_{session}_phase{item}')
+b0_phasediff = create_key(
+    'sub-{subject}/{session}/fmap/sub-{subject}_{session}_phasediff')
 
-    # query subjects
-    import flywheel
+# ASL scans
+asl = create_key(
+    'sub-{subject}/{session}/perf/sub-{subject}_{session}_acq-se_asl')
 
-    fw = flywheel.Client()
-
-    cs = fw.projects.find_first('label="{}"'.format("22Q_812481"))
-    cs_sessions = cs.sessions()
-    cs_subjects = [fw.get(x.parents.subject) for x in cs_sessions]
-
-    # initialise dict
-    sess_dict = {}
-
-    for x in range(len(cs_subjects)):
-        # get a list of their sessions
-        sess_list = cs_subjects[x].sessions()
-
-        if sess_list:
-            # sort that list by timestamp
-            sess_list = sorted(sess_list, key=lambda x: x.label) #Not sure this works
-
-            # loop through the sessions and assign the session label an index
-            for i, y in enumerate(sess_list):
-                sess_dict[y.label] = "22Q" + str(i + 1)
-
-    return sess_dict
-
-sessions = gather_session_indeces()
-
-def ReplaceSession(ses_label):
-    return str(sessions[ses_label])
-
-
+############################ Define heuristic rules ############################
 
 def infotodict(seqinfo):
-    # create the heuristic
-    info = {t1w: [], rest_bold_124: []}
+    """Heuristic evaluator for determining which runs belong where
+    allowed template fields - follow python string module:
+    item: index within category
+    subject: participant id
+    seqitem: run number during scanning
+    subindex: sub index within group
+    """
+
+    #last_run = len(seqinfo)
+
+    # Info dictionary to map series_id's to correct create_key key
+    info = {t1w: [],
+            rest_bold_124: [],  demo: [], #jolo: [],
+            dwi_run1: [], dwi_run2: [],
+            b0_mag: [], b0_phase: [], b0_phasediff: [],
+            asl: []
+            }
+
+    def get_latest_series(key, s):
+        info[key].append(s.series_id)
 
     for s in seqinfo:
         protocol = s.protocol_name.lower()
-        # t1
-        if "mprage" in protocol and 'nav' not in protocol and 'moco' not in protocol and 'ref' not in protocol:
-                info[t1w].append(s.series_id)
-        elif "restbold" in protocol and "124" in protocol:
-                info[rest_bold_124].append(s.series_id)
+
+        # Structural scans
+        if "mprage" in protocol and "nav" not in protocol and "MOSAIC" not in s.image_type:
+            get_latest_series(t1w, s)
+
+        # fmRI scans
+        elif "idemo" in protocol:
+            get_latest_series(demo, s)
+        elif "restbold" in protocol:
+            get_latest_series(rest_bold_124, s)
+        #elif "jolo" in protocol:
+        #    get_latest_series(jolo, s)
+
+        ## TODO: Is this correct?
+        # Fieldmap scans
+        elif "b0map" in protocol and "M" in s.image_type:
+            get_latest_series(b0_mag, s)
+        elif "b0map" in protocol and "P" in s.image_type:
+            if "v3" in protocol:
+                info[b0_phase].append(s.series_id)
+                get_latest_series(b0_phase, s)
+
+            else:
+                info[b0_phasediff].append(s.series_id)
+                get_latest_series(b0_phasediff, s)
+
+        # dwi
+        elif "dti" in protocol and not s.is_derived:
+            if "35" in protocol:
+                get_latest_series(dwi_run1, s)
+            elif "36" in protocol:
+                get_latest_series(dwi_run2, s)
+
+        # ASL scans
+        elif "pcasl" in protocol and "MOCO" not in s.image_type:
+            get_latest_series(asl, s)
+
+        else:
+            print("Series not recognized!: ", s.protocol_name, s.dcm_dir_name)
+
     return info
+
+################## Hardcode required params in MetadataExtras ##################
+MetadataExtras = {    
+    b0_phasediff: {
+        "EchoTime1": 0.00471,
+        "EchoTime2": 0.00717
+    },
+    # ASL params hardcoded from PNC_CS ASL metadata
+    asl: {
+        #"AcquisitionDuration": 123,
+        "ArterialSpinLabelingType": "PCASL", # required
+        #"AverageB1LabelingPulses": 0,
+        #"AverageLabelingGradient": 34,
+        "BackgroundSuppression": False, # required
+        "InterPulseSpacing": 4,
+        "LabelingDistance": 2,
+        "LabelingDuration": 1.2, # required 
+        "LabelingEfficiency": 0.72,
+        "LabelingSlabLocation": "X", # correct
+        "LabelingType": "PCASL", #?? unsure
+        #"LookLocker": True,
+        "M0Type": "Absent", # required 
+        "PCASLType": "balanced",
+        "PostLabelingDelay": 1.517, # required
+        #"PulseDuration": 1.5088,
+        #"PulseSequenceDetails": "WIP",
+        "PulseSequenceType": "2D",
+        "RepetitionTimePreparation": 0, # required
+        "SliceSelectiveLabelingGradient": 45 #not that important,  but correct
+        #"VascularCrushingVenc": 2
+    }
+}
+
+## TODO: Is this correct?
+IntendedFor = {
+    b0_phase: [
+        '{session}/func/sub-{subject}_{session}_task-rest_acq-singleband_bold.nii.gz',
+        #'{session}/func/sub-{subject}_{session}_task-jolo_bold.nii.gz',
+        '{session}/func/sub-{subject}_{session}_task-idemo_bold.nii.gz',
+        '{session}/dwi/sub-{subject}_{session}_run-01_dwi.nii.gz',
+        '{session}/dwi/sub-{subject}_{session}_run-02_dwi.nii.gz',
+        '{session}/perf/sub-{subject}_{session}_acq-se_asl.nii.gz'
+    ],
+    b0_phasediff: [
+        '{session}/func/sub-{subject}_{session}_task-rest_acq-singleband_bold.nii.gz',
+        '{session}/func/sub-{subject}_{session}_task-idemo_bold.nii.gz',
+        '{session}/dwi/sub-{subject}_{session}_run-01_dwi.nii.gz',
+        '{session}/dwi/sub-{subject}_{session}_run-02_dwi.nii.gz',
+        '{session}/perf/sub-{subject}_{session}_acq-se_asl.nii.gz'
+    ],
+    b0_mag: [
+        '{session}/func/sub-{subject}_{session}_task-rest_acq-singleband_bold.nii.gz',
+        #'{session}/func/sub-{subject}_{session}_task-jolo_bold.nii.gz',
+        '{session}/func/sub-{subject}_{session}_task-idemo_bold.nii.gz',
+        '{session}/dwi/sub-{subject}_{session}_run-01_dwi.nii.gz',
+        '{session}/dwi/sub-{subject}_{session}_run-02_dwi.nii.gz'
+        '{session}/perf/sub-{subject}_{session}_acq-se_asl.nii.gz'
+    ]
+}
+
+def AttachToSession():
+    NUM_VOLUMES=40
+    data = ['control', 'label'] * NUM_VOLUMES
+    data = '\n'.join(data)
+    data = 'volume_type\n' + data # the data is now a string; perfect!
+
+    # define asl_context.tsv file
+    asl_context = {
+        'name': 'sub-{subject}/{session}/perf/sub-{subject}_{session}_acq-se_aslcontext.tsv',
+        'data': data,
+        'type': 'text/tab-separated-values'
+    }
+
+    import pandas as pd 
+
+    df = pd.read_csv("info/task-idemo_events.tsv", sep='\t') 
+
+    # define idemo events.tsv file
+    idemo_events = {
+        'name': 'sub-{subject}/{session}/func/sub-{subject}_{session}_task-idemo_events.tsv',
+        'data': df.to_csv(index=False, sep='\t'),
+        'type': 'text/tab-separated-values'
+    }
+
+    '''
+    # define jolo events.tsv file
+    jolo_events = {
+        'name': 'sub-{subject}/{session}/func/sub-{subject}_{session}_task-jolo_events.tsv',
+        'data': df.to_csv(index=False, sep='\t'),
+        'type': 'text/tab-separated-values'
+    }
+    '''
+    return [asl_context, idemo_events]
+
+####################### Rename session and subject labels #######################
+
+# Use flywheel to gather a dictionary of all session session_labels
+# with their corresponding index by time, within the subject
+def gather_session_indices():
+
+    import flywheel
+    fw = flywheel.Client()
+
+    proj = fw.projects.find_first('label="{}"'.format("22Q_812481"))
+    subjects = proj.subjects()
+
+    # Initialize session dict
+    # Key: existing session label
+    # Value: new session label in form <proj_name><session idx>
+    session_labels = {}
+
+    for s in range(len(subjects)):
+
+        # Get a list of the subject's sessions
+        sessions = subjects[s].sessions()
+
+        if sessions:
+            # Sort session list by timestamp
+            sessions = sorted(sessions, key=lambda x: x.timestamp)
+            # loop through the subject's sessions, assign each session an index
+            for i, sess in enumerate(sessions):
+                session_labels[sess.label] = "22Q" + str(i + 1)
+
+    return session_labels
+
+session_labels = gather_session_indices()
+
+# Replace session label with <proj_name><session_idx>
+def ReplaceSession(ses_label):
+    return str(session_labels[ses_label])
+
+def ReplaceSubject(label):
+    return label.lstrip("0")
