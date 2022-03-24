@@ -227,7 +227,7 @@ def AttachToSession():
 
     output_file = {
 
-      'name': '{subject}_{session}_aslcontext.tsv',
+      'name': '{session}/perf/{subject}_{session}_aslcontext.tsv',
       'data': data,
       'type': 'text/tab-separated-values'
     }
