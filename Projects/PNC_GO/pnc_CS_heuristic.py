@@ -69,21 +69,21 @@ b0_phase_multi = create_key(
 rest_bold_100 = create_key(
     'sub-{subject}/{session}/func/sub-{subject}_{session}_task-rest_acq-100_bold')
 rest_bold_124 = create_key(
-    'sub-{subject}/{session}/func/sub-{subject}_{session}_task-rest_acq-singleband_bold')
+    'sub-{subject}/{session}/func/sub-{subject}_{session}_task-rest_acq-singleband124_bold')
 rest_bold_204 = create_key(
-    'sub-{subject}/{session}/func/sub-{subject}_{session}_task-rest_acq-singleband_bold')
+    'sub-{subject}/{session}/func/sub-{subject}_{session}_task-rest_acq-singleband204_bold')
 dwi_run1 = create_key(
     'sub-{subject}/{session}/dwi/sub-{subject}_{session}_run-01_dwi')
 dwi_run2 = create_key(
     'sub-{subject}/{session}/dwi/sub-{subject}_{session}_run-02_dwi')
 frac2back = create_key(
-    'sub-{subject}/{session}/func/sub-{subject}_{session}_task-frac2back_bold')
+    'sub-{subject}/{session}/func/sub-{subject}_{session}_task-frac2back_run-{seqitem}_bold')
 go2back = create_key(
-    'sub-{subject}/{session}/func/sub-{subject}_{session}_task-go2back_bold')
+    'sub-{subject}/{session}/func/sub-{subject}_{session}_task-go2back_run-{seqitem}_bold')
 hero = create_key(
-    'sub-{subject}/{session}/func/sub-{subject}_{session}_task-hero_bold')
+    'sub-{subject}/{session}/func/sub-{subject}_{session}_task-hero_run-{seqitem}_bold')
 demo = create_key(
-    'sub-{subject}/{session}/func/sub-{subject}_{session}_task-idemo_bold')
+    'sub-{subject}/{session}/func/sub-{subject}_{session}_task-idemo_run-{seqitem}_bold')
 #
 ## ASL scans
 asl = create_key(
