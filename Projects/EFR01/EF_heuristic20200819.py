@@ -109,10 +109,8 @@ def infotodict(seqinfo):
     #swi scans
         elif "qsm" in protocol and not s.is_derived and "NORM" in s.image_type:
                 append_series(qsm_mag, s)
-                print (s.dcm_dir_name)
         elif "qsm" in protocol and not s.is_derived  and "NORM" not in s.image_type:
                 append_series(qsm_phase, s)
-                print (s.dcm_dir_name)
     #fmap scans (pre and post name change)
         elif "distortionmap_pa" in protocol and "DIFFUSION" in s.image_type:
             append_series(fmap_pa_diff, s)
