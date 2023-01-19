@@ -18,24 +18,12 @@ asl=create_key(
    'sub-{subject}/{session}/perf/sub-{subject}_{session}_asl')
 m0=create_key(
    'sub-{subject}/{session}/perf/sub-{subject}_{session}_m0')
-#mean_perf=create_key(
-   #'sub-{subject}/{session}/perf/sub-{subject}_{session}_mean-perfusion')
-#qsm_mag_1= create_key(
-    #'sub-{subject}/ses-{session}/swi/sub-{subject}_ses-{session}_part-mag_echo-1_rec-norm_GRE')
-#qsm_mag_2= create_key(
-    #'sub-{subject}/ses-{session}/swi/sub-{subject}_ses-{session}_part-mag_echo-2_rec-norm_GRE')
-#qsm_mag_3= create_key(
-    #'sub-{subject}/ses-{session}/swi/sub-{subject}_ses-{session}_part-mag_echo-3_rec-norm_GRE')
-#qsm_mag_4= create_key(
-    #'sub-{subject}/ses-{session}/swi/sub-{subject}_ses-{session}_part-mag_echo-4_rec-norm_GRE')
-#qsm_phase_1= create_key(
-    #'sub-{subject}/ses-{session}/swi/sub-{subject}_ses-{session}_part-phase_echo-1_GRE')
-#qsm_phase_2= create_key(
-    #'sub-{subject}/ses-{session}/swi/sub-{subject}_ses-{session}_part-phase_echo-2_GRE')
-#qsm_phase_3= create_key(
-    #'sub-{subject}/ses-{session}/swi/sub-{subject}_ses-{session}_part-phase_echo-3_GRE')
-#qsm_phase_4= create_key(
-    #'sub-{subject}/ses-{session}/swi/sub-{subject}_ses-{session}_part-phase_echo-4_GRE')
+mean_perf=create_key(
+   'sub-{subject}/{session}/perf/sub-{subject}_{session}_mean-perfusion')
+qsm_mag = create_key(
+    'sub-{subject}/ses-{session}/swi/sub-{subject}_ses-{session}_part-mag_echo-{item}_rec-norm_GRE')
+qsm_phase= create_key(
+    'sub-{subject}/ses-{session}/swi/sub-{subject}_ses-{session}_part-phase_echo-{item}_GRE')
 fmap_pa_diff = create_key(
     'sub-{subject}/ses-{session}/fmap/sub-{subject}_ses-{session}_acq-dMRIdistmap_dir-PA_epi')
 fmap_ap_diff = create_key(
@@ -77,8 +65,7 @@ def infotodict(seqinfo):
     last_run=len(seqinfo)
 
     info = {t1w: [], t2w: [], ABCD_rest: [], func_rest_run_1: [], func_rest_run_2: [], fracback: [],
-             dwi: [], asl: [], m0: [], #mean_perf: [], #qsm_mag_1: [], qsm_mag_2: [], qsm_mag_3: [],
-            #qsm_mag_4: [], qsm_phase_1: [], qsm_phase_2: [], qsm_phase_3: [], qsm_phase_4: [],
+             dwi: [], asl: [], m0: [], mean_perf: [], qsm_mag: [],qsm_phase: [],
             fmap_pa_diff: [], fmap_ap_diff: [], fmap_ap_bold: [], fmap_pa_bold:[]}
 
     def append_series(key, s):
@@ -120,24 +107,10 @@ def infotodict(seqinfo):
         #elif s.series_description.endswith("_MeanPerf"):
             #append_series(mean_perf, s)
     #swi scans
-        #elif "qsm" in protocol and not s.is_derived and "NORM" in s.image_type:
-            #if s.dcm_dir_name.endswith('e1.nii.gz'):
-                #append_series(qsm_mag_1, s)
-            #elif s.dcm_dir_name.endswith('e2.nii.gz'):
-                #append_series(qsm_mag_2, s)
-            #elif s.dcm_dir_name.endswith('e3.nii.gz'):
-                #append_series(qsm_mag_3, s)
-            #else:
-                #append_series(qsm_mag_4, s)
-        #elif "qsm" in protocol and not s.is_derived  and "NORM" not in s.image_type:
-            #if s.dcm_dir_name.endswith('e1_ph.nii.gz'):
-                #append_series(qsm_phase_1, s)
-            #elif s.dcm_dir_name.endswith('e2_ph.nii.gz'):
-                #append_series(qsm_phase_2, s)
-            #elif s.dcm_dir_name.endswith('e3_ph.nii.gz'):
-                #append_series(qsm_phase_3, s)
-            #else:
-                #append_series(qsm_phase_4, s)
+        elif "qsm" in protocol and not s.is_derived and "NORM" in s.image_type:
+                append_series(qsm_mag, s)
+        elif "qsm" in protocol and not s.is_derived  and "NORM" not in s.image_type:
+                append_series(qsm_phase, s)
     #fmap scans (pre and post name change)
         elif "distortionmap_pa" in protocol and "DIFFUSION" in s.image_type:
             append_series(fmap_pa_diff, s)
@@ -227,7 +200,7 @@ def AttachToSession():
 
     output_file = {
 
-      'name': '{subject}_{session}_aslcontext.tsv',
+      'name': '{session}/perf/{subject}_{session}_aslcontext.tsv',
       'data': data,
       'type': 'text/tab-separated-values'
     }
